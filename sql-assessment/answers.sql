@@ -42,6 +42,22 @@ order by conversions_by_state desc
 -- Lowest cost, second highest number of impressions, second highest revenue
 -- This is with campaign 3 acting as an outlier because it was 3x the size of the other campaigns.
 
+select 
+		ci.name, 
+		sum(md.cost) as total_cost,
+		sum(md.impressions) as total_impressions,
+		sum(md.clicks) as total_clicks,
+		sum(wr.revenue) as total_revenue,
+		SUM(wr.revenue)/SUM(md.cost) as cost_ratio,
+		sum(md.cost)/sum(md.impressions) as cost_per_impression,
+		sum(wr.revenue)/sum(md.clicks) as click_spend,
+		sum(md.clicks)/sum(md.impressions) as conversion
+
+from campaign_info ci
+join marketing_performance_new md on ci.id = md.campaign_id
+join website_revenue wr on ci.id = wr.campaign_id
+group by ci.name
+
 -- 6.
 select 
 		wt.day_of_the_week,
